@@ -1,0 +1,67 @@
+  Sub KillLeadingSpaces()
+
+     'Press Alt + F11 to open the Visual Basic Editor (VBE)
+     'From the Menu, choose Insert-Module.
+     'Paste the code into the right-hand code window.
+     'Press Alt + F11 to close the VBE
+     'In Xl2003 Goto Tools ....Macro .... Macros and double-click KillLeadingSpaces
+     'In Xl2007/10 Goto Developer .. Macros and double-click KillLeadingSpaces
+
+    Dim rng1 As Range
+    Dim rngArea As Range
+    Dim lngRow As Long
+    Dim lngCol As Long
+    Dim lngCalc As Long
+    Dim objReg As Object
+    Dim X()
+
+    On Error Resume Next
+    Set rng1 = Application.InputBox("Select range for the replacement of leading zeros", "User select", Selection.Address, , , , , 8)
+    If rng1 Is Nothing Then Exit Sub
+    On Error GoTo 0
+
+    'See Patrick Matthews excellent article on using Regular Expressions with VBA
+    Set objReg = CreateObject("vbscript.regexp")
+    objReg.Pattern = "^[\s|\xA0]+"
+
+    'Speed up the code by turning off screenupdating and setting calculation to manual
+    'Disable any code events that may occur when writing to cells
+    With Application
+        lngCalc = .Calculation
+        .ScreenUpdating = False
+        .Calculation = xlCalculationManual
+        .EnableEvents = False
+    End With
+
+    'Test each area in the user selected range
+
+    'Non contiguous range areas are common when using SpecialCells to define specific cell types to work on
+    For Each rngArea In rng1.Areas
+        'The most common outcome is used for the True outcome to optimise code speed
+        If rngArea.Cells.Count > 1 Then
+           'If there is more than once cell then set the variant array to the dimensions of the range area
+           'Using Value2 provides a useful speed improvement over Value. On my testing it was 2% on blank cells, up to 10% on non-blanks
+            X = rngArea.Value2
+            For lngRow = 1 To rngArea.Rows.Count
+                For lngCol = 1 To rngArea.Columns.Count
+                    'replace the leading zeroes
+                    X(lngRow, lngCol) = objReg.Replace(X(lngRow, lngCol), vbNullString)
+                Next lngCol
+            Next lngRow
+            'Dump the updated array sans leading whitepace back over the initial range
+            rngArea.Value2 = X
+        Else
+            'caters for a single cell range area. No variant array required
+            rngArea.Value = objReg.Replace(rngArea.Value, vbNullString)
+        End If
+    Next rngArea
+
+    'cleanup the Application settings
+    With Application
+        .ScreenUpdating = True
+        .Calculation = lngCalc
+        .EnableEvents = True
+    End With
+
+    Set objReg = Nothing
+    End Sub

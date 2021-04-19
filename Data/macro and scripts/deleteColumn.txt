@@ -1,0 +1,3 @@
+Sub sbVBS_To_Delete_Multiple_Columns()
+    Columns("A:B").EntireColumn.Delete
+End Sub

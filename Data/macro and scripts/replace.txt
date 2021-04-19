@@ -1,0 +1,39 @@
+Sub replacerev()
+What = "*Attendance"
+repl = " "
+
+What1 = "Time*"
+repl1 = " "
+
+What2 = ":"
+repl2 = " "
+
+What3 = "*("
+repl3 = " "
+
+What4 = ")*"
+repl4 = " "
+
+
+Cells.replace What:=What, Replacement:=repl, LookAt:=xlPart, _
+SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+ReplaceFormat:=False
+
+Cells.replace What:=What1, Replacement:=repl1, LookAt:=xlPart, _
+SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+ReplaceFormat:=False
+
+Cells.replace What:=What2, Replacement:=repl2, LookAt:=xlPart, _
+SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+ReplaceFormat:=False
+
+Cells.replace What:=What3, Replacement:=repl3, LookAt:=xlPart, _
+SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+ReplaceFormat:=False
+
+Cells.replace What:=What4, Replacement:=repl4, LookAt:=xlPart, _
+SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+ReplaceFormat:=False
+
+End Sub
+

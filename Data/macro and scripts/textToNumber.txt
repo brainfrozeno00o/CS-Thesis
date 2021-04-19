@@ -1,0 +1,9 @@
+Sub Macro1()
+
+    Range("R2:R83").Select 'Range of values you need converted
+
+    For Each Cell In Selection
+    Cell.Value = (Cell.Value * 1)
+    Next
+
+End Sub
